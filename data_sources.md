@@ -1,4 +1,4 @@
-# Downloading potential field data by state
+# Downloading potential field data
 
 Some potential field data is available from the USGS Crustal Geophysics website. 
 
@@ -20,6 +20,8 @@ A variety of types of potential field data are available for select states.
 
 <https://crustal.usgs.gov/geophysics/state.html>
 
-## University of Texas El Paso maintains a Regional Geospatial Service Center with potential field data.
+### Regional potential field data
+
+University of Texas El Paso maintains a Regional Geospatial Service Center with potential field data.
 
 <http://gis.utep.edu/subpages/GMData.html>
