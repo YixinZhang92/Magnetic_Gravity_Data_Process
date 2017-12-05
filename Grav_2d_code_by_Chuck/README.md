@@ -29,4 +29,7 @@ To draw a new polygon:
 5) Add more polygons by pressing following steps 1-4, or press “Initialize” to delete all polygons.
 
 
+./high.png
+
+./low.png
 
