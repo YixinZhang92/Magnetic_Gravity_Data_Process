@@ -1,5 +1,3 @@
-%
-% /gaia/home/chi/oldclass/geop7112/problem2/prob2.m  
 % Shu-Chioung Chiu
 % September 19,2003
 
