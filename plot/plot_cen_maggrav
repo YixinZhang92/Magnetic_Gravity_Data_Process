@@ -1,8 +1,7 @@
 #! /bin/csh -f
 
 #   Remove the previous generated files
-rm -r profile.txt
-rm -r *.ps *.grd *.cpt
+/bin/rm  *.ps *.grd *.cpt *.uc.*
 
 #   plot_cen_maggrav: window a region from the central US gravity and
 #                     magnetics database, plot
@@ -41,8 +40,8 @@ if ( $5 < 1 || $5 > 9) then
 endif
 
 #   Set the location of directories where data files are located
-set GRAVDIR = /.     #  gravity data
-set MAGDIR = /.      #  magnetic data
+set GRAVDIR = ./Data/     #  gravity data
+set MAGDIR = ./Data/      #  magnetic data
 
 #   Set parameters based on each type of data
 #       DATA:   a .csv/.txt/.xyz file that is located at $GRAVDIR or $MAGDIR
@@ -54,6 +53,7 @@ set MAGDIR = /.      #  magnetic data
 #       zmax:   the maximum color value of CPTs for data
 #       step:   at what step, the color CPTs for data will change discretedly
 #               from zmin to zmax
+#       frame:  is set for the profile plot, 20 for gravity and 200 for magnetic
 if ( $5 == 1) then
 	set DATA = $GRAVDIR/completegravity.csv
 	set title = Complete_Bouguer_Anomaly
@@ -148,7 +148,7 @@ set PROJ = Jm
 
 #   Set the horizontal length scale of the final plot
 #       The length along the vertical direction will be determined by GMT.
-set SCALE = 5       # inches
+set SCALE = 3       # inches
 
 #   Set the location of the plot's lower left corner on page
 set XOFFSET = 2.5
@@ -198,12 +198,13 @@ gmt blockmedian $DATA -I$xinc/$yinc -R$REGION   -Q -V >! $mygrd".xyz"
 #       -T: tension_factor(s). These must be between 0 and 1
 gmt surface $mygrd".xyz" -G$mygrd".grd" -I$xinc/$yinc -R$REGION -T.25 -V 
 
+##################################################
 if ( $7 != 1 ) then
-	#    filter, upward/downward continuation if wanted
-	gmt grdfft $mygrd.grd -C-100 -M -L -G$mygrd.uc.grd
-	#grdfft $mygrd.grd -D10 -M -L -G$mygrd.uc.grd
-# second derivative
-	#grdfft $mygrd.grd -D -D -M -V -G$mygrd.uc.grd
+#       filter, upward/downward continuation if wanted
+    gmt grdfft $mygrd.grd -C-100 -M -L -G$mygrd.uc.grd
+#   grdfft $mygrd.grd -D10 -M -L -G$mygrd.uc.grd
+#       second derivative
+#   grdfft $mygrd.grd -D -D -M -V -G$mygrd.uc.grd
 endif
 
 #    make the color table for the original data
@@ -224,41 +225,27 @@ gmt makecpt -Cjet -Z -T$zmin/$zmax/$step -V >! $mygrd".cpt"
 #makecpt -Cgravity -Z -T$zmin/$zmax/10 -V >! $mygrd".cpt"
 # cpt made by Heather - gravity.cpt, magnetics.cpt
 
-# cap
 #makecpt -Crainbow -Z `minmax -T1 $mygrd.1` -V >! $mygrd".cpt"
 
 if ( $7 != 1 ) then
-	#    make the color table for the filtered data
-	gmt grd2xyz $mygrd.uc.grd >! $mygrd.uc.xyz
-	awk '{print $3}' $mygrd.uc.xyz >! $mygrd.uc.1
-	gmt minmax -I1/1 -C $mygrd.uc.1 >! $mygrd.uc.minmax
-	@ zmin1 = `awk '{print $1}' $mygrd.uc.minmax`
-	@ zmax1 = `awk '{print $2}' $mygrd.uc.minmax`
-	gmt makecpt -Crainbow -Z -T$zmin1/$zmax1/100 >! $mygrd".uc.cpt"
+#    make the color table for the filtered data
+gmt grd2xyz $mygrd.uc.grd >! $mygrd.uc.xyz
+awk '{print $3}' $mygrd.uc.xyz >! $mygrd.uc.1
+gmt minmax -I1/1 -C $mygrd.uc.1 >! $mygrd.uc.minmax
+@ zmin1 = `awk '{print $1}' $mygrd.uc.minmax`
+@ zmax1 = `awk '{print $2}' $mygrd.uc.minmax`
+gmt makecpt -Crainbow -Z -T$zmin1/$zmax1/100 >! $mygrd".uc.cpt"
 endif
 
-
-if ( $7 == 1 ) then
-	set CONTINUE1 = "-O"
-	else
-	set CONTINUE1 = "-O -K"
-endif
-
-#grdimage $mygrd.grd -Cmagnetics.cpt -$PROJ$SCALE -R$REGION -V -K -X$XOFFSET -Y$YOFFSET >! $OUTPUTFILE
 gmt grdimage $mygrd.grd -C$mygrd.cpt -$PROJ$SCALE -R$REGION -V -K -X$XOFFSET -Y$YOFFSET -P >! $OUTPUTFILE
 gmt pscoast -$PROJ -Bf0.5a0.5:."$title": -R$REGION -Df -W -Ia -Na -V -O -K >> $OUTPUTFILE
-# cap
 
 ################################################################################################
-##     warnning: if it is magnetic plot, change B20 to B200
 ##
-################################################################################################
-gmt psscale -D8/-1.00/15.0/0.2h -B20:"$unit": -C$mygrd.cpt $CONTINUE1 -K -V  >> $OUTPUTFILE
-
-gmt psxy profile_line.txt -R -$PROJ -O -W1 -Sc0.2 -G255/255/255 -K >> $OUTPUTFILE
-gmt psxy profile_line.txt -R -$PROJ -O -W1 -K  >> $OUTPUTFILE
-##############################################################################################
-## change start and end : starting point and ending point  Format: longitude/latitude
+##  Plot the profile with setted up profile_line
+##
+##  change start and end : starting point and ending point
+##  Format: longitude/latitude
 #############################################################################################
 set INCREMENT = 1
 set START = -88/35
@@ -266,8 +253,20 @@ set END = -91/38
 gmt project -G$INCREMENT -Q -E$END -C$START -V >! slicecoords.xyz
 gmt grdtrack slicecoords.xyz -G$mygrd.grd -V >! slicevals.xyz
 awk '{ print $3, $4}' slicevals.xyz >! profile.txt
+#################################################################################################
+##
+##  warnning: if it is magnetic plot, change B20 to B200
+##
+################################################################################################
+gmt psscale -D8/-1.00/15.0/0.2h -B20:"$unit": -C$mygrd.cpt -O -K -V  >> $OUTPUTFILE
+
+gmt psxy profile_line.txt -R -$PROJ -O -W1 -Sc0.2 -G255/255/255 -K >> $OUTPUTFILE
+gmt psxy profile_line.txt -R -$PROJ -O -W1 -K  >> $OUTPUTFILE
+
 ##########################################################################################
-## change the tick if it is magnetic plot example B40:Distance:/200
+##
+##  warnning: change the tick if it is magnetic plot (example B40:Distance:/200)
+##
 #########################################################################################
 set tick=-B40:Distance:/20:."$title":WSen
 awk '{print $1, $2}' profile.txt | gmt psxy -R0/440/$zmin/$zmax -JX15/5 $tick -W1  -Sc0.2 -G200 -O \
@@ -275,10 +274,8 @@ awk '{print $1, $2}' profile.txt | gmt psxy -R0/440/$zmin/$zmax -JX15/5 $tick -W
 
 if ( $7 != 1 ) then
  gmt grdimage $mygrd.uc.grd -C$mygrd.uc.cpt -X3.2 -$PROJ -R$REGION $CONTINUE -V >> $OUTPUTFILE
- gmt pscoast -$PROJ -Bf1a2:"$title": -R$REGION -Df -Ia2/0/0/255 -Na -V $CONTINUE >> $OUTPUTFILE
+ gmt pscoast -$PROJ -Bf1a2:"$title": -R$REGION -Df -Ia2 -Na -V $CONTINUE >> $OUTPUTFILE
 
 #   CAP write scale
 endif
-
-
 
