@@ -8,3 +8,4 @@ The folder "plot" includes a macro " plot_cen_maggrav" written by Christine Powe
 
 One can do detrend, upward continuation, reduce to pole, vertical derivative, and horizontal derivative. 
 
+The file "plot_cen_maggrav" in main directory is GMT version to do upward/downward continuation, while "plot_cen_maggrav" under the directory "plot" is matlab version to do same work. 
