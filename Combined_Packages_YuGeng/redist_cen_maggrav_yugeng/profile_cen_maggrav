@@ -1,0 +1,63 @@
+#! /bin/csh/ -f
+
+#   profile_cen_maggrav:  window a region from the central US gravity and
+#                     magnetics database, retrieve data along profile
+
+if ($#argv != 7) then
+    echo "Usage:  $0 { startlong startlat endlong endlat datatype outfile delta }"
+    echo "        startlong = end point longitude (east is positive)"
+    echo "        startlat  = end point latitude (north is positive"
+    echo "        endlong = mid point longitude"
+    echo "        endlat  = mid point latitude"
+    echo "        datatype = 1, bouguer gravity anomaly"
+    echo "                 = 2, reduced to pole magnetic anomaly"
+    echo "                 = 3, total field magnetic anomaly"
+    echo "        outfile  = name of the output file"
+    echo "        delta    = sampling interval in km"
+    exit
+endif
+
+#   set location of data files
+set GRAVDIR = /gaia/tesuji/d1/local/class/Regional/gravmag/gmt/data/gravdata
+set MAGDIR  = /gaia/tesuji/d1/local/class/Regional/gravmag/gmt/data/magdata
+
+if ( $5 < 1 && $5 > 3) then
+	echo "Use correct datatype"
+	exit
+endif
+
+if ( $5 == 1) then
+
+	set mygrd = cenboug.grd
+endif
+if ( $5 == 2) then
+
+	set mygrd = cenrtpmag.grd
+endif
+if ( $5 == 3) then
+
+	set mygrd = centotmag.grd
+endif
+
+#    Set .gmtdefaults file locally
+#gmtdefaults -Du  >  .gmtdefaults
+#gmtset DEGREE_FORMAT 5
+
+# profile coordinates
+set START = $1/$2
+set END = $3/$4
+set INCREMENT = $7
+set OUTPUT = $6
+
+#
+#   create the data set for the profile
+#
+project -G$INCREMENT -Q -E$END -C$START -V >! slicecoords.xyd
+grdtrack slicecoords.xyd -G$mygrd -V >! slicevals.xyz
+awk '{print $3, $4}' slicevals.xyz >! $OUTPUT.dz
+
+
+
+
+
+
