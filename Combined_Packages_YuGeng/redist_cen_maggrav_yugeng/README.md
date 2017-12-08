@@ -3,7 +3,7 @@
 
 **Abstract**
 > The project aims to reproduce the functionalities of `plot_cen_maggrav` and
-> `profile_cen_maggrav` on a modern platform, instead of the original shell
+> `profile_cen_maggrav` on a modern platform, instead of via the original shell
 > scripting, which makes the programs easier to read and debug/modify.
 
 **Features and capabilities**
@@ -13,8 +13,10 @@
 3) Locations of the cross-section planes are determined automatically according
    to your input data
    - No adjustment is needed for a different study region
-4) By modifying the program, you can also show cross-section profiles of the
-   derivatives, which is explained in details in the documentation
+4) compute directional derivative towards arbitrary azimuth and create a
+   0~359 deg animation
+5) compute the maximum magnitude of first derivative towards each direction
+   and plot it as a function of azimuth
 
 All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
@@ -41,6 +43,10 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
      ```
 
 2. Take down the range of longitude and latitude printed in the Command Window.
+
+3. Show cross-section profiles of the derivatives
+   - Read documentations of `cross_profiles()` and the examples in `main.m`
+       closely.
 
 * Determination of projection thickness
   - Each plane must have a projection thickness (given by the tolerance of data
@@ -89,17 +95,17 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
  Additional feature
 -------------------------------------------------------------
 
-* Show cross-section profiles of the derivatives
-  - Read documentations of `cross_profiles()` and the examples in `main.m`
-    closely.
+* Compute first derivatives toward each direction and create an animation.
+    Record the maximum magnitude in the derivatives and plot them as a function
+    of azimuth.
+  - To make the animation strictly periodic, please set up an integer divisor
+      of 360.
 
-* Some example output
-  - Second derivative with respect to longitude (note that the colorscale is
-    forcely centred at zero)
-    ![xy_plane](./output/second_xx/xy_plane.png)
-  - EW cross-section profiles (note that vertical axes are unified for all the
-    windows)
-    ![profiles_ew](./output/second_xx/profiles_ew.png)
-  - NS cross-section profiles (note that vertical axes are unified for all the
-    windows)
-    ![profiles_ns](./output/second_xx/profiles_ns.png)
+
+**Example Output**
+  - Maximum amplitudes of derivatives as a function of azimuth, created using a
+      stepsize of 15 deg.
+    ![amp_vs_az](./output/direct_deriv/ampvsaz_15_deg.png)
+  - Animated first derivatives toward each direction (looping around a full
+      circle), created with a stepsize of 6 deg.
+    ![step_12_deg](./output/direct_deriv/anime_06_deg.gif)

@@ -4,16 +4,19 @@
 % 
 % Main features and capabilities
 % 
-% The package is capable of:
+% The package is capable of
 % 1) plotting the gravity map and showing several EW and NS cross-section
 %    profiles
-% 2) detrending the gravity data before doing upward/downward continuations
+% 2) detrending the gravity data before doing upward/downward
+%    continuations
 % 
-% In addition,
-% 3) by modifying main.m, you can also show the cross-section profiles of the
-%    first and second derivatives, which is explained in the documentation in
-%    details
-% 4) matlab plots are saved automatically in the subfolder you specified
+% Additional features
+% 3) compute directional derivative towards arbitrary azimuth and create a
+%    0~359 deg animation
+% 4) compute the maximum magnitude of derivative towards each direction
+%    and plot it as a function of azimuth
+% 5) all matlab plots are saved automatically in the subfolder you
+%    specified
 % 
 % All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4.
 % 
@@ -24,13 +27,13 @@
 % 
 
 clc
-clf
 clear all
 close all
 
 %% Preparations.
 
 % set paths to dependencies
+addpath(fullfile(pwd, 'movie2gif'));
 addpath(fullfile(pwd, 'subroutines'));
 
 % read in data
@@ -79,7 +82,7 @@ save_file('./input/first_y.xyv', glon, glat, Gy);
 save_file('./input/second_xx.xyv', glon, glat, Gxx);
 save_file('./input/second_yy.xyv', glon, glat, Gyy);
 save_file('./input/second_xy.xyv', glon, glat, Gxy);
-disp('Done. Go to the ./report/ folder to visualize them.');
+disp('Done. Note that yellow is forcely centred at zero.');
 
 % 
 % You can also use the same subroutine to project derivatives.
@@ -100,3 +103,60 @@ disp('Done. Go to the ./report/ folder to visualize them.');
 % Everytime you call cross_profiles(), figures will be saved automatically in
 % the subfolder you specified.
 % 
+
+%% Additional feature
+
+% animation parameters
+d_phi = 6;  % <= specify a stepsize, please use an integer divisor of 360
+phi = 0 : d_phi : 359;
+nof_frames = numel(phi);
+F(nof_frames) = struct('cdata',[], 'colormap',[]);
+u_max = zeros(1, nof_frames);
+
+% obtain clim from x and y derivatives
+GxGy = [Gx, Gy];  % merge dataset
+min_GxGy = min(min(GxGy));
+max_GxGy = max(max(GxGy));
+abs_min = abs(min_GxGy);
+abs_max = abs(max_GxGy);
+clim = min(abs_min, abs_max);
+
+% render the first time, obtain the value range
+fig_mov = figure;
+disp('Rendering animation...');
+for i = 1 : nof_frames
+    u_max(i) = direct_deriv(clim, fig_mov, dl, Cg, glon, glat, phi(i), 'none');
+    drawnow;
+    F(i) = getframe(gcf);
+end
+close(fig_mov);
+
+% examine output directory
+gif_path = './output/direct_deriv/';
+if ~exist(gif_path, 'dir')
+    mkdir(gif_path);
+end
+
+% plot maximum magnitude vs. azimuth
+fig_az = figure;
+hold on;
+plot(phi, u_max);
+% scatter(phi, u_max, '.');
+hold off;
+title('Maximum Amplitude vs. Azimuth');
+xlabel('Azimuth [deg]');
+ylabel('[mGal/deg]');
+xlim([0, 360]);
+saveas(fig_az, ['./output/direct_deriv/ampvsaz_', ...
+    num2str(d_phi,'%02d'), '_deg.png']);
+
+% play the movie
+figure;  % show rendered movie in a separate window
+disp('Playing the movie...');
+movie(F, 5);  % play it for five times
+% note that it doesn't increase the file size of the saved gif
+
+% save the movie
+fullpath = [gif_path, 'anime_', num2str(d_phi,'%02d'), '_deg.gif'];
+movie2gif(F, fullpath, 'LoopCount', 0, 'DelayTime', 0);
+disp(['Movie saved as: ', fullpath]);

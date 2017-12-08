@@ -148,6 +148,7 @@ abs_min = abs(min(min(Cg)));
 abs_max = abs(max(max(Cg)));
 clim = min(abs_min, abs_max);
 caxis([-clim, clim]);  % adjust colorscale
+axis('equal', 'tight');
 
 title(sup_title);
 xlabel('Lon [deg]');
