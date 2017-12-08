@@ -1,0 +1,11 @@
+.cproject
+.project
+*.xyz
+*.cpt
+*.grd
+*.ps
+*.history
+profile*
+*.uc.*
+.gitignore.swo
+.gitignore.swp
