@@ -237,7 +237,7 @@ gmt minmax -I1/1 -C $mygrd.uc.1 >! $mygrd.uc.minmax
 gmt makecpt -Crainbow -Z -T$zmin1/$zmax1/100 >! $mygrd".uc.cpt"
 endif
 
-gmt grdimage $mygrd.grd -C$mygrd.cpt -$PROJ$SCALE -R$REGION -V -K -X$XOFFSET -Y$YOFFSET -P >! $OUTPUTFILE
+gmt grdimage $mygrd.uc.grd -C$mygrd.uc.cpt -$PROJ$SCALE -R$REGION -V -K -X$XOFFSET -Y$YOFFSET -P >! $OUTPUTFILE
 gmt pscoast -$PROJ -Bf0.5a0.5:."$title": -R$REGION -Df -W -Ia -Na -V -O -K >> $OUTPUTFILE
 
 ################################################################################################
