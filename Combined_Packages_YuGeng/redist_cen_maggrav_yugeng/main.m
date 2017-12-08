@@ -107,7 +107,7 @@ disp('Done. Note that yellow is forcely centred at zero.');
 %% Additional feature
 
 % animation parameters
-d_phi = 6;  % <= specify a stepsize, please use an integer divisor of 360
+d_phi = 15;  % <= specify a stepsize, please use an integer divisor of 360
 phi = 0 : d_phi : 359;
 nof_frames = numel(phi);
 F(nof_frames) = struct('cdata',[], 'colormap',[]);
@@ -139,24 +139,26 @@ end
 
 % plot maximum magnitude vs. azimuth
 fig_az = figure;
+% subplot(2,1,1);
 hold on;
 plot(phi, u_max);
 % scatter(phi, u_max, '.');
 hold off;
+daspect([max(glon)-min(glon), max(glat)-min(glat), 1]);
 title('Maximum Amplitude vs. Azimuth');
 xlabel('Azimuth [deg]');
-ylabel('[mGal/deg]');
+ylabel('Directional Derivative [mGal/deg]');
 xlim([0, 360]);
-saveas(fig_az, ['./output/direct_deriv/ampvsaz_', ...
+saveas(fig_az, ['./output/direct_deriv/amp_', ...
     num2str(d_phi,'%02d'), '_deg.png']);
 
 % play the movie
 figure;  % show rendered movie in a separate window
 disp('Playing the movie...');
-movie(F, 5);  % play it for five times
+movie(F, 3);  % play it for three times
 % note that it doesn't increase the file size of the saved gif
 
 % save the movie
 fullpath = [gif_path, 'anime_', num2str(d_phi,'%02d'), '_deg.gif'];
-movie2gif(F, fullpath, 'LoopCount', 0, 'DelayTime', 0);
+movie2gif(F, fullpath, 'LoopCount', Inf, 'DelayTime', 0);
 disp(['Movie saved as: ', fullpath]);

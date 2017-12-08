@@ -13,9 +13,9 @@
 3) Locations of the cross-section planes are determined automatically according
    to your input data
    - No adjustment is needed for a different study region
-4) compute directional derivative towards arbitrary azimuth and create a
+4) Compute directional derivative towards arbitrary azimuth and create a
    0~359 deg animation
-5) compute the maximum magnitude of first derivative towards each direction
+5) Compute the maximum magnitude of first derivative towards each direction
    and plot it as a function of azimuth
 
 All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
@@ -103,9 +103,9 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
 
 **Example Output**
-  - Maximum amplitudes of derivatives as a function of azimuth, created using a
-      stepsize of 15 deg.
-    ![amp_vs_az](./output/direct_deriv/ampvsaz_15_deg.png)
   - Animated first derivatives toward each direction (looping around a full
       circle), created with a stepsize of 6 deg.
     ![step_12_deg](./output/direct_deriv/anime_06_deg.gif)
+  - Maximum amplitudes of derivatives as a function of azimuth, created using a
+      stepsize of 15 deg.
+    ![amp_vs_az](./output/direct_deriv/amp_15_deg.png)
