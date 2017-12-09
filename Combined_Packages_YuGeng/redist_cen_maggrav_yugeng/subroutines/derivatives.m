@@ -1,4 +1,4 @@
-function [Gx, Gy, Gxx, Gyy, Gxy] = derivatives(dl, Cg)
+function [Gx, Gy, Gxx, Gyy, Gxy, Gyx] = derivatives(dl, Cg)
 % first and second derivatives of Bouguer anomaly
 % created by Yu Geng
 % 2017-09-13
@@ -14,54 +14,53 @@ function [Gx, Gy, Gxx, Gyy, Gxy] = derivatives(dl, Cg)
 % Note that x corresponds to the row of a matrix and y corresponds to the
 % column of a matrix.
 % 
-% Coordinate System in a Matrix
-% O --------------------> Y (lat)
-% |
-% |
-% |
-% |
-% |
-% |
-% |
-% |
-% \/
-% X (lon)
+% Clarification about MATLAB convention
+% * use the first index to move along +y axis (north)
+% * use the second index to move along +x axis (east)
+% - the convention about y axis is confusing, because when the index number
+%   increases, you are actually moving downward
+% - however, the data are stored in the matrix in a "downward increasing"
+%   manner i.e. you do not have to flip anything
+% 
 
 %% Compute first derivatives.
-Gx = diff(Cg, 1, 1) ./ dl;  % 1 means along lon
-Gy = diff(Cg, 1, 2) ./ dl;  % 2 means along lat
+
+% restore matlab convention
+Cg = Cg';
+
+% compute central difference
+[Gx, Gy] = gradient(Cg);
+
+% convert to derivatives
+Gx = Gx ./ dl;
+Gy = Gy ./ dl;
+
+% Gx - gradient along longitude
+% Gy - gradient along latitude
 
 %% Compute second derivatives.
-Gxx = diff(Cg, 2, 1) ./ dl ./ dl;
-Gyy = diff(Cg, 2, 2) ./ dl ./ dl;
-Gxy = diff(Gx, 1, 2) ./ dl;  % 1,2 mean perform one derivative on the y coordinate
 
-% diff(a, 2, 1) is equivalent to diff(diff(a, 1, 1), 1, 1)
-% You can verify this by creating a random matrix.
+% compute central difference
+[Gxx, Gxy] = gradient(Gx);
+[Gyx, Gyy] = gradient(Gy);
 
-%% Create duplicate values at matrix borders (remain original size).
-Gx_last_row = Gx(end,:);
-Gx = [Gx; Gx_last_row];
+% convert to derivatives
+Gxx = Gxx ./ dl;
+Gxy = Gxy ./ dl;
+Gyx = Gyx ./ dl;
+Gyy = Gyy ./ dl;
 
-Gy_last_column = Gy(:,end);
-Gy = [Gy, Gy_last_column];
-
-Gxx_first_row = Gxx(1,:);
-Gxx_last_row = Gxx(end,:);
-Gxx = [Gxx_first_row; Gxx; Gxx_last_row];
-
-Gyy_first_column = Gxx(:,1);
-Gyy_last_column = Gxx(:,end);
-Gyy = [Gyy_first_column, Gyy, Gyy_last_column];
-
-Gxy_last_column = Gxy(:,end);
-Gxy = [Gxy, Gxy_last_column];
-Gxy_last_row = Gxy(end,:);
-Gxy = [Gxy; Gxy_last_row];
-
-% dGxy was obtained by taking x derivative first and then take y
+% Avoid using diff(), you will miss one row/column each time you take a
 % derivative.
-% Conversely, the missing column should be created firstly and the missing
-% row shoule be created secondly.
+% Use gradient() instead of diff(), it adopts central difference which
+% retains the size of the matrix.
+
+% flip x and y
+Gx = Gx';
+Gy = Gy';
+Gxx = Gxx';
+Gxy = Gxy';  % you can verify that
+Gyx = Gyx';  % Gyx is very close to Gxy
+Gyy = Gyy';
 
 end

@@ -1,6 +1,7 @@
 function u_max = direct_deriv(clim, fig, dl, Cg, glon, glat, az, subfdr)
 %DIRECT_DERIV    Directional derivative.
 % Compute first derivative along arbitrary azimuth.
+% 
 % clim - a specified fixed value range for the colorbar
 % fig - the figure handle, used for saving plot
 %     - you could have trouble with aspect ratio if you do not pass it
@@ -10,40 +11,36 @@ function u_max = direct_deriv(clim, fig, dl, Cg, glon, glat, az, subfdr)
 % az - azimuth provided in [deg], clockwise from north
 % subfdr - subfolder for saving figure
 %        - specify 'none' to turn the saving off
+% 
 % GENG, Yu
 % 2017-12-08
 % 
-% Coordinate System in a Matrix
-% Note that we did not flip lon and lat here. It is just a convention that
-% X corresponds to the first index and Y corresponds to the second index.
-% O --------------------> Y (lat)
-% |
-% |
-% |
-% |
-% |
-% |
-% |
-% |
-% \/
-% X (lon)
+% Clarification about MATLAB convention
+% * use the first index to move along +y axis (north)
+% * use the second index to move along +x axis (east)
+% - the convention about y axis is confusing, because when the index number
+%   increases, you are actually moving downward
+% - however, the data are stored in the matrix in a "downward increasing"
+%   manner i.e. you do not have to flip anything
+% 
 
 %% Compute gradients.
-Gx = diff(Cg, 1, 1) ./ dl;  % 1 means along lon
-Gy = diff(Cg, 1, 2) ./ dl;  % 2 means along lat
 
-% create duplicate values at matrix borders (remain original size)
-Gx_last_row = Gx(end,:);
-Gx = [Gx; Gx_last_row];
+% convert back into matlab convention
+Cg = Cg';
 
-Gy_last_column = Gy(:,end);
-Gy = [Gy, Gy_last_column];
+% compute gradients
+[Gx, Gy] = gradient(Cg);
+Gx = Gx ./ dl;
+Gy = Gy ./ dl;  % do not flip the sign here!
+
+% Gx - gradient along longitude
+% Gy - gradient along latitude
 
 %% Create a unit vector representing the AZ angle.
 rad = 90 - az;  % convert to math radian
 unit_x = cosd(rad);  % scalar
 unit_y = sind(rad);  % scalar
-% unit = [unit_x, unit_y];
 
 % perform inner product (Gx, Gy) : (unit_x, unit_y)
 Gd = Gx .* unit_x + Gy .* unit_y;
@@ -52,23 +49,25 @@ Gd = Gx .* unit_x + Gy .* unit_y;
 
 % find the origin of the vector
 loc = 0.67;  % location on plot, given as a ratio
-org_x = min(glon) + loc * (max(glon) - min(glon));
-org_y = min(glat) + loc * (max(glat) - min(glat));
-% org = [org_x, org_y];
+% org_x = min(glon) + loc * (max(glon) - min(glon));
+% org_y = min(glat) + loc * (max(glat) - min(glat));
 
 % start making the figure
 clf;
 savname = ['az_', num2str(az,'%03d'), '.png'];
 
 hold on;
-pcolor(glon, glat, Gd');
+pcolor(glon, glat, Gd);
 shading interp;
 colormap jet;
-% quiver(org_x, org_y, 0.1*unit_x, 0.1*unit_y, 'MaxHeadSize', 2.0);
+% quiver(org_x, org_y, 0.1*unit_x, ...
+%     0.1*unit_y, 'MaxHeadSize', 2.0);
 hold off;
 
-annotation('arrow', [loc, loc+0.1*loc*unit_x], [loc, loc+0.1*loc*unit_y]);
-title(['First Derivative towards ', num2str(az,'%3d'), '^\circ']);
+annotation('arrow', [loc, loc+0.1*loc*unit_x], ...
+    [loc, loc+0.1*loc*unit_y]);
+title(['First Derivative towards ', ...
+    num2str(az,'%3d'), '^\circ']);
 xlabel('Lon [deg]');
 ylabel('Lat [deg]');
 cb = colorbar;

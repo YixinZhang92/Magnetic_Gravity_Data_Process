@@ -242,4 +242,6 @@ title(['F', space_buffer, 'F''']);
 
 saveas(fig_ns, [outdir, '/profiles_ns.png']);
 
+disp(['Figures save as: ', outdir, '/*.png']);
+
 end

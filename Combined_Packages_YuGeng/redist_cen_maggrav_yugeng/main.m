@@ -21,9 +21,9 @@
 % All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4.
 % 
 % Created on: 2017-09-11
-% Last modification:
-%     - the colorscale of map view is forcely centred at zero
-%     - vertical axes are unified for all the cross-section windows
+% Last update:
+% * adjusted aspect ratio
+%   - lon and lat should be in the same scale
 % 
 
 clc
@@ -53,10 +53,6 @@ Fg = scatteredInterpolant(lon, lat, grav, 'natural', 'none');
 Cg = Fg(LON(:,:,1), LAT(:,:,1));
 Cg = Cg.';  % transpose into math convention
 
-% the idea matlab flips X and Y is to show the matrix with pcolor() with
-% its original structure (first index as vertical and second index as
-% horizontal)
-
 %% Screen output and figures.
 
 % show study region
@@ -65,14 +61,15 @@ disp([min(lon), max(lon), min(lat), max(lat)]);
 
 % plot raw data with cross-section profiles
 tol = 0.6 * dl;  % tolerance of data truncation
-margin = 0.10;  % distance between texts and the borders of the figure
+margin = 0.10;   % distance between texts and the borders of the figure
 cross_profiles('raw_data', 'Raw Data', '[mGal]', Cg, glon, glat, margin, tol);
 
 %% Compute first and second derivatives.
 
 % start timer
 tic();
-[Gx, Gy, Gxx, Gyy, Gxy] = derivatives(dl, Cg);
+disp('Computing derivatives...');
+[Gx, Gy, Gxx, Gyy, Gxy, Gyx] = derivatives(dl, Cg);
 toc();
 
 % save data

@@ -4,7 +4,7 @@
 **Abstract**
 > The project aims to reproduce the functionalities of `plot_cen_maggrav` and
 > `profile_cen_maggrav` on a modern platform, instead of via the original shell
-> scripting, which makes the programs easier to read and debug/modify.
+> scripts, which makes the programs easier to read and debug/modify.
 
 **Features and capabilities**
 1) Plot several EW and NS cross-section profiles

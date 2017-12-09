@@ -1,4 +1,4 @@
-#! /bin/csh/ -f
+#! /bin/csh -f
 
 #   profile_cen_maggrav:  window a region from the central US gravity and
 #                     magnetics database, retrieve data along profile
