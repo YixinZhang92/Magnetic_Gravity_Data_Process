@@ -38,7 +38,7 @@
 ```
 -   ./plot_cen_maggrav -92 -87 35 38.5 3 magnetic_up_continuation 2 (magnetic 2km upward continuation) 
 ```
-![up_continuation2)(../Output_Png/magnetic_up_continuation.png)
+![up_continuation2](../Output_Png/magnetic_up_continuation.png)
 ```
 -   ./plot_cen_maggrav -92 -87 35 38.5 3 magnetic_1st_order_vertical_derivative 3 ( magnetic 1st order vertical derivative)
 ```
