@@ -10,6 +10,7 @@
 ```
 -   ./plot_cen_maggrav -92 -87 35 38.5 1 complete_bouguer 1 ( complete bouguer anamaly)
 ```
+![complete_bouguer](https://github.com/Regional-Geop-Synthesis/Magnetic_Gravity_Data_Process/tree/master/Grav_Mag_process_plot_by_Chunyu/output/complete_bouguer.ps)
 ```
 -   ./plot_cen_maggrav -92 -87 35 38.5 1 complete_bouguer_up_continuation 2 (2km upward continuation)
 ```
