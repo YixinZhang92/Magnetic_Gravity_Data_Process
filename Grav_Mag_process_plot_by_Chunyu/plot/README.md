@@ -6,7 +6,7 @@
 - all above processes could be use in gravity and magnetic field
 
 
-# simple commands to extract all you need
+# Simple commands to extract all you need
 ```
 -   ./plot_cen_maggrav -92 -87 35 38.5 1 complete_bouguer 1 ( complete bouguer anamaly)
 ```
@@ -51,6 +51,6 @@
 -   ./plot_cen_maggrav -92 -87 35 38.5 3 magnetic_directional_derivative 5 ( magnetic 90 degree directional derivative) 
 ```
 ![directional_derivative2](../Output_Png/magnetic_directional_derivative.png)
-# directional derivative variation with azimuth (video clip)
+# Directional derivative variation with azimuth (video clip)
 
 [![video](../Output_Png/video.jpg)](https://drive.google.com/file/d/1gqYfQjx6byjadlzNMgdxRJFd5_lfwn-F/view?usp=sharing)
