@@ -51,3 +51,6 @@
 -   ./plot_cen_maggrav -92 -87 35 38.5 3 magnetic_directional_derivative 5 ( magnetic 90 degree directional derivative) 
 ```
 ![directional_derivative2](../Output_Png/magnetic_directional_derivative.png)
+# directional derivative variation with azimuth
+
+[![directional_derivative](../Output_Png/magnetic_directional_derivative.png)](https://drive.google.com/file/d/1gqYfQjx6byjadlzNMgdxRJFd5_lfwn-F/view?usp=sharing)
