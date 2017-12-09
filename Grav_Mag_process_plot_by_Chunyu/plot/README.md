@@ -53,4 +53,4 @@
 ![directional_derivative2](../Output_Png/magnetic_directional_derivative.png)
 # directional derivative variation with azimuth
 
-[![directional_derivative](../Output_Png/magnetic_directional_derivative.png)](https://drive.google.com/file/d/1gqYfQjx6byjadlzNMgdxRJFd5_lfwn-F/view?usp=sharing)
+[![video](../Output_Png/video.jpg)](https://drive.google.com/file/d/1gqYfQjx6byjadlzNMgdxRJFd5_lfwn-F/view?usp=sharing)
