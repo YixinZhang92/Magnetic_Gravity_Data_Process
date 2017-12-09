@@ -3,10 +3,10 @@
 - Reduce to pole magnetic anomaly
 - total/dtrend magnetic field
 - upward/downward continuation, 1st order vertical derivative, 2nd order vertical derivative, directional derivative
-- all above process could be use in gravity and magnetic field
+- all above processes could be use in gravity and magnetic field
 
 
-# simple command to extract all you need
+# simple commands to extract all you need
 ```
 -   ./plot_cen_maggrav -92 -87 35 38.5 1 complete_bouguer 1 ( complete bouguer anamaly)
 ```
