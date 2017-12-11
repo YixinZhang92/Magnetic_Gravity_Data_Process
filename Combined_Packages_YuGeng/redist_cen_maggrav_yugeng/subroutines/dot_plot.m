@@ -1,4 +1,4 @@
-function dot_plot(subdir, Cg, glon, glat, interv)
+function dot_plot(subdir, dl, Cg, glon, glat, interv)
 %DOT_PLOT  Maxima of horizontal gradients.
 % Show places where horizontal gradients of gravity data are locally high.
 % 
@@ -8,7 +8,8 @@ function dot_plot(subdir, Cg, glon, glat, interv)
 % interv - interval size you want to level the data with
 %        - for gravity gradient in unit [mGal/deg], use 100
 %        - in [mGal/km], 1 is suggested
-%        - it is also related to your spacing
+%        - however, it should not be significantly affected by your spacing
+%        - because gradients are normalized
 % 
 % GENG, Yu
 % 2017-12-10
@@ -21,7 +22,9 @@ Cg = Cg';
 
 % compute maximum gradient
 [Gx, Gy] = gradient(Cg);
-mag_H = Gx .* Gx + Gy .* Gy;  % magnitude of horizontal gradient
+Gx = Gx ./ dl;
+Gy = Gy ./ dl;
+mag_H = sqrt(Gx .* Gx + Gy .* Gy);  % magnitude of horizontal gradient
 max_mag = max(max(mag_H));
 
 % divide them into levels
@@ -43,8 +46,8 @@ for i = 2:nof_levels  % skip the smallest interval so that you get a white bg
     lowlim = levels(i);
     upplim = levels(i+1);
     [dlon, dlat, sc, lgd] = ...
-        sel_data(upplim, lowlim, mag_H, glon, glat);  % sc is for size only
-    scatter(dlon, dlat, sc, 'filled', ...
+        sel_data(upplim, lowlim, mag_H, glon, glat, interv);  % sc is for size only
+    scatter(dlon, dlat, sc*2.0, 'filled', ...
         'DisplayName', lgd);  % color is automatic
 end
 hold off;
@@ -52,7 +55,7 @@ hold off;
 axis('equal');  % do not set 'tight' here
 xlim([min(glon), max(glon)]);
 ylim([min(glat), max(glat)]);
-leg = legend('show', 'Location', 'Best');  % cannot add title to legend
+legend('show', 'Location', 'Best');  % cannot add title to legend
 % title(leg, '\|\nabla{g}_z(x,y)\|_2 [mGal/deg]');
 
 % examine working directory

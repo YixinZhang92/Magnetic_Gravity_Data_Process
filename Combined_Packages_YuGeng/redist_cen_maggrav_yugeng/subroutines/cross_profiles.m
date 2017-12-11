@@ -187,7 +187,11 @@ suptitle('EW Cross-Sections')
 set(0, 'DefaultLineLineWidth', 1.5)
 
 subplot(3,1,1);
+hold on;
 plot(AA_pro_x, AA_pro_y);
+% scatter(AA_pro_x, AA_pro_y, '*');
+hold off;
+
 xlim([min_lon, max_lon]);
 ylim([-ewlim, ewlim]);  % unified window scale
 xlabel('Lon [deg]');
@@ -195,7 +199,11 @@ ylabel(unit);
 title(['A', space_buffer, 'A''']);
 
 subplot(3,1,2);
+hold on;
 plot(BB_pro_x, BB_pro_y);
+% scatter(BB_pro_x, BB_pro_y, '*');
+hold off;
+
 xlim([min_lon, max_lon]);
 ylim([-ewlim, ewlim]);  % unified window scale
 xlabel('Lon [deg]');
@@ -203,7 +211,11 @@ ylabel(unit);
 title(['B', space_buffer, 'B''']);
 
 subplot(3,1,3);
+hold on;
 plot(CC_pro_x, CC_pro_y);
+% scatter(CC_pro_x, CC_pro_y, '*');
+hold off;
+
 xlim([min_lon, max_lon]);
 ylim([-ewlim, ewlim]);  % unified window scale
 xlabel('Lon [deg]');
@@ -218,7 +230,11 @@ suptitle('NS Cross-Sections')
 set(0, 'DefaultLineLineWidth', 1.5)
 
 subplot(3,1,1);
+hold on;
 plot(DD_pro_x, DD_pro_y);
+% scatter(DD_pro_x, DD_pro_y, '*');
+hold off;
+
 xlim([min_lat, max_lat]);
 ylim([-nslim, nslim]);  % unified window scale
 xlabel('Lat [deg]');
@@ -226,7 +242,11 @@ ylabel(unit);
 title(['D', space_buffer, 'D''']);
 
 subplot(3,1,2);
+hold on;
 plot(EE_pro_x, EE_pro_y);
+% scatter(EE_pro_x, EE_pro_y, '*');
+hold off;
+
 xlim([min_lat, max_lat]);
 ylim([-nslim, nslim]);  % unified window scale
 xlabel('Lat [deg]');
@@ -234,7 +254,11 @@ ylabel(unit);
 title(['E', space_buffer, 'E''']);
 
 subplot(3,1,3);
+hold on;
 plot(FF_pro_x, FF_pro_y);
+% scatter(FF_pro_x, FF_pro_y, '*');
+hold off;
+
 xlim([min_lat, max_lat]);
 ylim([-nslim, nslim]);  % unified window scale
 xlabel('Lat [deg]');

@@ -106,7 +106,7 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
 **Example Output**
   - Places where magnitudes of horizontal gradients are locally higher than
-      their surrounding regions <br>
+      their surrounding regions. <br>
     ![the_dot_plot](./output/raw_data/dot_plot.png)
   - Animated first derivatives toward each direction (looping around a full
       circle), created with a stepsize of 6 deg. <br>

@@ -58,8 +58,13 @@ Cg = Cg.';  % transpose into math convention
 %% Screen output and figures.
 
 % show maxima of horizontal gradients
-interv = 20;  % <= there is no empirical formula for this
-dot_plot('raw_data', Cg, glon, glat, interv);
+interv = 100;
+dot_plot('raw_data', dl, Cg, glon, glat, interv);
+
+% Selection of Levelling Interval:
+% there is no empirical formula for interval
+% but it tells the magnitude of your data
+% which can be used to normalize symbol size
 
 % show study region
 disp('Study region:');
@@ -110,7 +115,7 @@ disp('Done. Note that yellow is forcely centred at zero.');
 
 %% Additional feature.
 
-% animation parameters
+% animation settings
 d_phi = 15;  % <= specify a stepsize, please use an integer divisor of 360
 phi = 0 : d_phi : 359;
 nof_frames = numel(phi);
@@ -136,24 +141,9 @@ for i = 1 : nof_frames
 end
 close(fig_mov);
 
-% examine output directory
+% save the maximum magnitude vs. azimuth
 gif_path = './output/direct_deriv/';
-if ~exist(gif_path, 'dir')
-    mkdir(gif_path);
-end
-
-% plot maximum magnitude vs. azimuth
-fig_az = figure;
-hold on;
-plot(phi, u_max);
-hold off;
-daspect([max(glon)-min(glon), max(glat)-min(glat), 1]);
-title('Maximum Amplitude vs. Azimuth');
-xlabel('Azimuth [deg]');
-ylabel('Directional Derivative [mGal/deg]');
-xlim([0, 360]);
-saveas(fig_az, ['./output/direct_deriv/amp_', ...
-    num2str(d_phi,'%02d'), '_deg.png']);
+save_mag(gif_path, phi, u_max, glon, glat, d_phi);
 
 % play the movie
 figure;  % show rendered movie in a separate window

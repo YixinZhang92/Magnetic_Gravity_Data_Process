@@ -1,5 +1,5 @@
 function [dlon, dlat, sc, lgd] = ...
-    sel_data(upplim, lowlim, mag_H, glon, glat)
+    sel_data(upplim, lowlim, mag_H, glon, glat, interv)
 %SEL_DATA  Subroutine of dot_plot().
 % Create two vectors containing the coordinates for the data within the
 % range. The interval for fetching data is right-closed (largest value
@@ -8,6 +8,8 @@ function [dlon, dlat, sc, lgd] = ...
 % mag_H - computed magnitudes of horizontal gradients in dot_plot
 %       - given in the matlab index convention
 % glon, glat - axes matching the gravity data
+% interv - interval used to level the data
+%        - used for normalizing symbol size
 % 
 % GENG, Yu
 % 2017-12-10
@@ -48,7 +50,7 @@ if counter ~= nof_ones
 end
 
 % create size and legend
-sc = lowlim;
+sc = upplim / interv;
 lgd = [num2str(lowlim), '~', num2str(upplim), ' mGal/deg'];
 
 end

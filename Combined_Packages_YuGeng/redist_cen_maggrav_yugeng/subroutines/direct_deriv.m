@@ -4,7 +4,6 @@ function u_max = direct_deriv(clim, fig, dl, Cg, glon, glat, az, subfdr)
 % 
 % clim - a specified fixed value range for the colorbar
 % fig - the figure handle, used for saving plot
-%     - you could have trouble with aspect ratio if you do not pass it
 % dl - spacing along both x and y
 % Cg - 2-D gridded data, could be gravity or anything
 % glon, glat - gridded horizontal and vertical axes
