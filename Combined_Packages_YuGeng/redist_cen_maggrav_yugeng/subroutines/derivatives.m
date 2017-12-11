@@ -55,7 +55,7 @@ Gyy = Gyy ./ dl;
 % Use gradient() instead of diff(), it adopts central difference which
 % retains the size of the matrix.
 
-% flip x and y
+% restore math convention (fetch data with M(i,j) instead of M(j,i))
 Gx = Gx';
 Gy = Gy';
 Gxx = Gxx';

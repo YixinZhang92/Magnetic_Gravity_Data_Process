@@ -1,22 +1,22 @@
-**Regional Geop. Synthesis Group Project** <br>
+**Regional Geop. Synthesis Individual Project** <br>
     - *a redistribution of `plot_cen_maggrav` and `profile_cen_maggrav`*
 
 **Abstract**
 > The project aims to reproduce the functionalities of `plot_cen_maggrav` and
-> `profile_cen_maggrav` on a modern platform, instead of via the original shell
-> scripts, which makes the programs easier to read and debug/modify.
+> `profile_cen_maggrav` on a modern platform, instead of via the traditional
+> shell scripts, which makes the programs easier to read and debug/modify.
 
 **Features and capabilities**
+0) Show places where magnitudes of horizontal gradients are locally high
 1) Plot several EW and NS cross-section profiles
 2) Detrending of the raw data before doing upward/downward continuations
    - Read GMT scripts under the `./report/` folder for details
-3) Locations of the cross-section planes are determined automatically according
-   to your input data
+3) A lot of parameters are taken care of by the program automatically
    - No adjustment is needed for a different study region
 4) Compute directional derivative towards arbitrary azimuth and create a
    0~359 deg animation
-5) Compute the maximum magnitude of first derivative towards each direction
-   and plot it as a function of azimuth
+5) Record the maximum magnitudes of directional derivatives and plot them as a
+   function of azimuth
 
 All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
@@ -99,10 +99,13 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
     Record the maximum magnitude in the derivatives and plot them as a function
     of azimuth.
   - To make the animation strictly periodic, please set up an integer divisor
-      of 360.
+      of 360 for the stepsize.
 
 
 **Example Output**
+  - Places where magnitudes of horizontal gradients are locally higher than
+      their surrounding regions
+    ![the_dot_plot](./output/raw_data/dot_plot.png)
   - Animated first derivatives toward each direction (looping around a full
       circle), created with a stepsize of 6 deg.
     ![step_12_deg](./output/direct_deriv/anime_06_deg.gif)

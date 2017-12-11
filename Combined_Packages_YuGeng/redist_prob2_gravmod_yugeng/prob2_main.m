@@ -58,7 +58,7 @@ disp('--->  Results for Profile Two');
 toc();
 
 % visualize the results
-fig = figure
+fig = figure;
 set(0, 'DefaultLineLineWidth', 2)
 
 subplot(2,1,1)

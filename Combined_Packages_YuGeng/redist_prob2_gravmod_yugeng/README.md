@@ -57,6 +57,16 @@ All tests passed on MATLAB R2014a and R2015a.
 
 
 **Example Output**
+  * Information shown in the Command Window
+    ```
+    --->  Results for Profile One
+    Total # of iterations: 5
+    Final location (X, R, Z) [km]: -0.0020321  3.3629  10.039
+    --->  Results for Profile Two
+    Total # of iterations: 5
+    Final location (X, R, Z) [km]: -0.00022162  2.0402  2.9913
+    Elapsed time is 3.234167 seconds.
+    ```
   * Elizabeth's gravity profiles (output from `grav_2d.m`)
     ![eliz_profiles_reprod](./plots/eliz_profiles_reprod.png)
   * The inversion results

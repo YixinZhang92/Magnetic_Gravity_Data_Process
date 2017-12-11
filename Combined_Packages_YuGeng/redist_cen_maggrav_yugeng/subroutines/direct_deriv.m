@@ -1,5 +1,5 @@
 function u_max = direct_deriv(clim, fig, dl, Cg, glon, glat, az, subfdr)
-%DIRECT_DERIV    Directional derivative.
+%DIRECT_DERIV  Directional derivative.
 % Compute first derivative along arbitrary azimuth.
 % 
 % clim - a specified fixed value range for the colorbar

@@ -1,10 +1,12 @@
 % 
-% Regional Geop. Synthesis Group Project
+% Regional Geop. Synthesis Individual Project
 %     - a redistribution of plot_cen_maggrav and profile_cen_maggrav
 % 
 % Main features and capabilities
 % 
 % The package is capable of
+% 0) showing places where horizontal gradients are locally higher than
+%    surroundings
 % 1) plotting the gravity map and showing several EW and NS cross-section
 %    profiles
 % 2) detrending the gravity data before doing upward/downward
@@ -13,8 +15,8 @@
 % Additional features
 % 3) compute directional derivative towards arbitrary azimuth and create a
 %    0~359 deg animation
-% 4) compute the maximum magnitude of derivative towards each direction
-%    and plot it as a function of azimuth
+% 4) record the maximum magnitude of derivative towards each direction and
+%    plot it as a function of azimuth
 % 5) all matlab plots are saved automatically in the subfolder you
 %    specified
 % 
@@ -22,15 +24,15 @@
 % 
 % Created on: 2017-09-11
 % Last update:
-% * adjusted aspect ratio
-%   - lon and lat should be in the same scale
+% * added maxima of horizontal gradients
+% * adjusted aspect ratio - lon and lat should be in the same scale
 % 
 
 clc
 clear all
 close all
 
-%% Preparations.
+%% Grid the data.
 
 % set paths to dependencies
 addpath(fullfile(pwd, 'movie2gif'));
@@ -43,7 +45,7 @@ lat  = xyzgrd(:,2);
 grav = xyzgrd(:,3);
 
 % calculate axes and prepare meshgrid
-dl = 0.05;  % assume that spacings along lon and along lat are the same
+dl = 0.02;  % assume that spacings along lon and along lat are the same
 glon = min(lon) : dl : max(lon);
 glat = min(lat) : dl : max(lat);
 [LON, LAT] = meshgrid(glon, glat);
@@ -55,6 +57,10 @@ Cg = Cg.';  % transpose into math convention
 
 %% Screen output and figures.
 
+% show maxima of horizontal gradients
+interv = 20;  % <= there is no empirical formula for this
+dot_plot('raw_data', Cg, glon, glat, interv);
+
 % show study region
 disp('Study region:');
 disp([min(lon), max(lon), min(lat), max(lat)]);
@@ -62,7 +68,8 @@ disp([min(lon), max(lon), min(lat), max(lat)]);
 % plot raw data with cross-section profiles
 tol = 0.6 * dl;  % tolerance of data truncation
 margin = 0.10;   % distance between texts and the borders of the figure
-cross_profiles('raw_data', 'Raw Data', '[mGal]', Cg, glon, glat, margin, tol);
+cross_profiles('raw_data', 'Raw Data', '[mGal]', ...
+    Cg, glon, glat, margin, tol);
 
 %% Compute first and second derivatives.
 
@@ -101,7 +108,7 @@ disp('Done. Note that yellow is forcely centred at zero.');
 % the subfolder you specified.
 % 
 
-%% Additional feature
+%% Additional feature.
 
 % animation parameters
 d_phi = 15;  % <= specify a stepsize, please use an integer divisor of 360
@@ -111,7 +118,7 @@ F(nof_frames) = struct('cdata',[], 'colormap',[]);
 u_max = zeros(1, nof_frames);
 
 % obtain clim from x and y derivatives
-GxGy = [Gx, Gy];  % merge dataset
+GxGy = [Gx; Gy];  % merge dataset
 min_GxGy = min(min(GxGy));
 max_GxGy = max(max(GxGy));
 abs_min = abs(min_GxGy);
@@ -122,7 +129,8 @@ clim = min(abs_min, abs_max);
 fig_mov = figure;
 disp('Rendering animation...');
 for i = 1 : nof_frames
-    u_max(i) = direct_deriv(clim, fig_mov, dl, Cg, glon, glat, phi(i), 'none');
+    u_max(i) = direct_deriv(clim, fig_mov, ...
+        dl, Cg, glon, glat, phi(i), 'none');
     drawnow;
     F(i) = getframe(gcf);
 end
@@ -136,10 +144,8 @@ end
 
 % plot maximum magnitude vs. azimuth
 fig_az = figure;
-% subplot(2,1,1);
 hold on;
 plot(phi, u_max);
-% scatter(phi, u_max, '.');
 hold off;
 daspect([max(glon)-min(glon), max(glat)-min(glat), 1]);
 title('Maximum Amplitude vs. Azimuth');

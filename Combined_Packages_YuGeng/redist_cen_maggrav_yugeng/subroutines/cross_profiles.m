@@ -1,4 +1,5 @@
-function cross_profiles(subdir, sup_title, unit, Cg, glon, glat, margin, tol)
+function cross_profiles(subdir, sup_title, unit, ...
+    Cg, glon, glat, margin, tol)
 %CROSS_PROFILES Calculate and show several gravity profiles along the
 %   determined cross-section planes from the range of your data, used for
 %   either raw data or first and second derivatives.
@@ -242,6 +243,6 @@ title(['F', space_buffer, 'F''']);
 
 saveas(fig_ns, [outdir, '/profiles_ns.png']);
 
-disp(['Figures save as: ', outdir, '/*.png']);
+% disp(['Figures save as: ', outdir, '/*.png']);
 
 end
