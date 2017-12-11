@@ -67,7 +67,7 @@ All tests passed on MATLAB R2014a and R2015a.
     Final location (X, R, Z) [km]: -0.00022162  2.0402  2.9913
     Elapsed time is 3.234167 seconds.
     ```
-  * Elizabeth's gravity profiles (output from `grav_2d.m`)
+  * Elizabeth's gravity profiles (output from `grav_2d.m`) <br>
     ![eliz_profiles_reprod](./plots/eliz_profiles_reprod.png)
-  * The inversion results
+  * The inversion results <br>
     ![inversion_results](./plots/inversion_results.png)

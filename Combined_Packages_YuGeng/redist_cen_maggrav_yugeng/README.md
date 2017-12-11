@@ -7,23 +7,23 @@
 > shell scripts, which makes the programs easier to read and debug/modify.
 
 **Features and capabilities**
-0) Show places where magnitudes of horizontal gradients are locally high
-1) Plot several EW and NS cross-section profiles
-2) Detrending of the raw data before doing upward/downward continuations
+1) Show places where magnitudes of horizontal gradients are locally high
+2) Plot several EW and NS cross-section profiles
+3) Detrending of the raw data before doing upward/downward continuations
    - Read GMT scripts under the `./report/` folder for details
-3) A lot of parameters are taken care of by the program automatically
+4) A lot of parameters are taken care of by the program automatically
    - No adjustment is needed for a different study region
-4) Compute directional derivative towards arbitrary azimuth and create a
+5) Compute directional derivative towards arbitrary azimuth and create a
    0~359 deg animation
-5) Record the maximum magnitudes of directional derivatives and plot them as a
+6) Record the maximum magnitudes of directional derivatives and plot them as a
    function of azimuth
 
 All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
 
--------------------------------------------------------------
- Plot cross-section profiles of the raw data
--------------------------------------------------------------
+-----------------------------------------------------------------------------
+ Maxima of horizontal gradients, cross-section profiles and derivatives
+-----------------------------------------------------------------------------
 
 1. Use `main` to show places where magnitudes of horizontal gradients are
     locally high, plot several EW and NS cross-section profiles and calculate
@@ -66,9 +66,9 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
     interpret old and outdated figures.
 
 
--------------------------------------------------------------
+-----------------------------------------------------------------------------
  Compute downward/upward continuations
--------------------------------------------------------------
+-----------------------------------------------------------------------------
 
 1. Go to `./report/`
 
@@ -93,9 +93,9 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
       adjust them for you.
 
 
--------------------------------------------------------------
+-----------------------------------------------------------------------------
  Additional feature
--------------------------------------------------------------
+-----------------------------------------------------------------------------
 
 * Compute first derivatives toward each direction and create an animation.
     Record the maximum magnitude in the derivatives and plot them as a function
@@ -106,11 +106,11 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
 **Example Output**
   - Places where magnitudes of horizontal gradients are locally higher than
-      their surrounding regions
+      their surrounding regions <br>
     ![the_dot_plot](./output/raw_data/dot_plot.png)
   - Animated first derivatives toward each direction (looping around a full
-      circle), created with a stepsize of 6 deg.
+      circle), created with a stepsize of 6 deg. <br>
     ![step_12_deg](./output/direct_deriv/anime_06_deg.gif)
   - Maximum amplitudes of derivatives as a function of azimuth, created using a
-      stepsize of 15 deg.
+      stepsize of 15 deg. <br>
     ![amp_vs_az](./output/direct_deriv/amp_15_deg.png)
