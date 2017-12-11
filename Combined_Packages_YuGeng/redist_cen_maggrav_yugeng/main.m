@@ -61,10 +61,11 @@ Cg = Cg.';  % transpose into math convention
 interv = 100;
 dot_plot('raw_data', dl, Cg, glon, glat, interv);
 
-% Selection of Levelling Interval:
-% there is no empirical formula for interval
-% but it tells the magnitude of your data
-% which can be used to normalize symbol size
+% Determination of Division Interval:
+% - there is no empirical formula for interval
+% - but it tells the magnitude of your data
+% - which can be used to normalize symbol size
+% - see sel_data() for detail
 
 % show study region
 disp('Study region:');

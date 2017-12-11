@@ -5,7 +5,7 @@ function dot_plot(subdir, dl, Cg, glon, glat, interv)
 % subdir - subdirectory to save figure, provide name only (no slash symbol)
 % Cg - gridded 2-D gravity data
 % glon, glat - gridded axes corresponding to Cg
-% interv - interval size you want to level the data with
+% interv - interval size you want to section the data with
 %        - for gravity gradient in unit [mGal/deg], use 100
 %        - in [mGal/km], 1 is suggested
 %        - however, it should not be significantly affected by your spacing

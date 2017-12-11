@@ -8,7 +8,7 @@ function [dlon, dlat, sc, lgd] = ...
 % mag_H - computed magnitudes of horizontal gradients in dot_plot
 %       - given in the matlab index convention
 % glon, glat - axes matching the gravity data
-% interv - interval used to level the data
+% interv - interval used to section the data
 %        - used for normalizing symbol size
 % 
 % GENG, Yu
