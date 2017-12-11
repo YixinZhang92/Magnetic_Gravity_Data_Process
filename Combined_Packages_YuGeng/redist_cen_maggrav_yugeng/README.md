@@ -25,7 +25,8 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
  Plot cross-section profiles of the raw data
 -------------------------------------------------------------
 
-1. Use `main` to plot several EW and NS cross-section profiles and calculate
+1. Use `main` to show places where magnitudes of horizontal gradients are
+    locally high, plot several EW and NS cross-section profiles and calculate
     first and second derivatives.
    - Prepare
      ```
@@ -37,6 +38,7 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
      ```
      ./input/first_*.xyv
      ./input/second_*.xyv
+     ./output/raw_data/dot_plot.png
      ./output/raw_data/profiles_ew.png
      ./output/raw_data/profiles_ns.png
      ./output/raw_data/xy_plane.png
