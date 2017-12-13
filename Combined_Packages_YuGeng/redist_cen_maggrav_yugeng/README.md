@@ -58,13 +58,13 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
       comes with MATLAB R2015+. It works on all the MATLAB versions even if you
       do not have the Mapping Toolbox. An obvious advantage of `borders v2`
       over the GSHHG dataset is its file size.
-  - To plot a different region not in the U.S., change 'continental us' to
-      'countries'.
-  - Specify 'nomap' to use pure number tickmarks, for example, -90 represents
+  - To plot a different region not in the U.S., change `'continental us'` to
+      `'countries'`.
+  - Specify `'nomap'` to use pure number tickmarks, for example, -90 represents
       90 W and 90 represents 90 E - important if you want to superimpose the
       coastlines onto an existing dataset, such as gravity map.
-  - Specify 'HandleVisibility','off' to hide the handles from the legend - you
-      have many useless labels otherwise.
+  - Specify `'HandleVisibility','off'` to hide the handles from the legend - you
+      will have many useless labels otherwise.
   - See
     ```
     https://www.mathworks.com/examples/matlab/community/20106-borders-documentation
@@ -111,7 +111,7 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
 
 **Example Output**
-  - Original gravity map with state boundaries <br>
+  - Original gravity map with state boundaries. <br>
     ![raw_data](./output/raw_data/xy_plane.png)
   - Places where magnitudes of horizontal gradients are locally higher than
       their surrounding regions. <br>
