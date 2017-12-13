@@ -35,6 +35,7 @@ close all
 %% Grid the data.
 
 % set paths to dependencies
+addpath(fullfile(pwd, 'borders'));
 addpath(fullfile(pwd, 'movie2gif'));
 addpath(fullfile(pwd, 'subroutines'));
 
@@ -59,13 +60,8 @@ Cg = Cg.';  % transpose into math convention
 
 % show maxima of horizontal gradients
 interv = 100;
-dot_plot('raw_data', dl, Cg, glon, glat, interv);
-
-% Determination of Division Interval:
-% - there is no empirical formula for interval
-% - but it tells the magnitude of your data
-% - which can be used to normalize symbol size
-% - see sel_data() for detail
+subfdr = 'raw_data';
+dot_plot(subfdr, dl, Cg, glon, glat, interv);
 
 % show study region
 disp('Study region:');

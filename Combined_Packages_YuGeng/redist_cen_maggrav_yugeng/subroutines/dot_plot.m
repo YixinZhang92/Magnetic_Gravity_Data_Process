@@ -50,13 +50,15 @@ for i = 2:nof_levels  % skip the smallest interval so that you get a white bg
     scatter(dlon, dlat, sc*2.0, 'filled', ...
         'DisplayName', lgd);  % color is automatic
 end
+borders('continental us','nomap','k--', ...
+    'HandleVisibility','off');  % superimpose state boundaries onto the gravity
 hold off;
 
+% adjustments
 axis('equal');  % do not set 'tight' here
 xlim([min(glon), max(glon)]);
 ylim([min(glat), max(glat)]);
 legend('show', 'Location', 'Best');  % cannot add title to legend
-% title(leg, '\|\nabla{g}_z(x,y)\|_2 [mGal/deg]');
 
 % examine working directory
 outdir = ['./output/', subdir, '/'];

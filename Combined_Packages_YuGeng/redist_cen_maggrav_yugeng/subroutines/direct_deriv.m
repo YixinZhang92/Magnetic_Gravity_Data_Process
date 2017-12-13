@@ -59,10 +59,11 @@ hold on;
 pcolor(glon, glat, Gd);
 shading interp;
 colormap jet;
-% quiver(org_x, org_y, 0.1*unit_x, ...
-%     0.1*unit_y, 'MaxHeadSize', 2.0);
+borders('continental us','nomap','k--', ...
+    'HandleVisibility','off');  % superimpose state boundaries onto the gravity
 hold off;
 
+% plot the vector, etc.
 annotation('arrow', [loc, loc+0.1*loc*unit_x], ...
     [loc, loc+0.1*loc*unit_y]);
 title(['First Derivative towards ', ...
@@ -73,10 +74,13 @@ cb = colorbar;
 title(cb, '[mGal/deg]');
 
 % enfore yellow to be at zero
-% clim = min(abs_min, abs_max);  % the one that is closer to zero
 caxis([-clim, clim]);  % use the stabilized clim given as the input
-axis('equal', 'tight');
+axis('equal');  % xlim and ylim must be set after axis()
+xlim([min(glon), max(glon)]);
+ylim([min(glat), max(glat)]);
 
+% if output directory is 'none',
+% do not save figure
 if ~strcmp(subfdr, 'none')
     outdir = ['./output/', subfdr, '/'];
     if ~exist(outdir, 'dir')

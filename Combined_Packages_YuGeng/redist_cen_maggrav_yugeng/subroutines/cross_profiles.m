@@ -141,21 +141,27 @@ nslim = max(abs_max_ns, abs_min_ns);
 
 % original data (shown on an X-Y plane)
 fig_xy = figure;
+hold on;
 pcolor(glon, glat, Cg.');
 shading interp;
 colormap jet;  % 2015 default: parula
-
-abs_min = abs(min(min(Cg)));
-abs_max = abs(max(max(Cg)));
-clim = min(abs_min, abs_max);
-caxis([-clim, clim]);  % adjust colorscale
-axis('equal', 'tight');
+borders('continental us','nomap','k--', ...
+    'HandleVisibility','off');  % superimpose state boundaries onto the gravity
+hold off;
 
 title(sup_title);
 xlabel('Lon [deg]');
 ylabel('Lat [deg]');
 cb = colorbar;
 title(cb, unit);
+axis('equal');  % xlim and ylim must be set after axis()
+
+abs_min = abs(min(min(Cg)));
+abs_max = abs(max(max(Cg)));
+clim = min(abs_min, abs_max);
+caxis([-clim, clim]);  % enforce yellow centred
+xlim([min(glon), max(glon)]);
+ylim([min(glat), max(glat)]);
 
 hold on;
 line_style = 'k:';

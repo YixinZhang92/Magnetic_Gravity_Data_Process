@@ -18,11 +18,14 @@
 6) Record the maximum magnitudes of directional derivatives and plot them as a
    function of azimuth
 
+**Last update**
+* Added state boundaries - wraps the functionalities of GSHHG dataset
+
 All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
 
 -----------------------------------------------------------------------------
- Maxima of horizontal gradients, cross-section profiles and derivatives
+ Horizontal gradients, cross-section profiles and derivatives
 -----------------------------------------------------------------------------
 
 1. Use `main` to show places where magnitudes of horizontal gradients are
@@ -50,20 +53,23 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
    - Read documentations of `cross_profiles()` and the examples in `main.m`
        closely.
 
-* Determination of projection thickness
-  - Each plane must have a projection thickness (given by the tolerance of data
-    truncation), which means you could have multiple profiles for a single
-    cross-section.
-  - If multiple profiles exist within a projection range, then mean values will
-    be computed.
-  - If the tolerance is overly small, you may have problems with data
-    truncation.
-  - It is suggested that you start from a small truncation tolerance (e.g. half
-    of the global spacing) and increase it little by little, until the message
-    `No data obtained for projection!` is gone.
-  - Previous output will be cleaned up whenever the error message is prompted
-    out. This is to avoid any confusion that is possible e.g. people trying to
-    interpret old and outdated figures.
+* Miscellanies about `borders v2`
+  - `borders v2` is a light alternative to the prominent Mapping Toolbox that
+      comes with MATLAB R2015+. It works on all the MATLAB versions even if you
+      do not have the Mapping Toolbox. An obvious advantage of `borders v2`
+      over the GSHHG dataset is its file size.
+  - To plot a different region not in the U.S., change 'continental us' to
+      'countries'.
+  - Specify 'nomap' to use pure number tickmarks, for example, -90 represents
+      90 W and 90 represents 90 E - important if you want to superimpose the
+      coastlines onto an existing dataset, such as gravity map.
+  - Specify 'HandleVisibility','off' to hide the handles from the legend - you
+      have many useless labels otherwise.
+  - See
+    ```
+    https://www.mathworks.com/examples/matlab/community/20106-borders-documentation
+    ```
+    for documents.
 
 
 -----------------------------------------------------------------------------
@@ -105,6 +111,8 @@ All tests passed on OS X 10.6.8 and 10.9.5 with GMT 4 installed.
 
 
 **Example Output**
+  - Original gravity map with state boundaries <br>
+    ![raw_data](./output/raw_data/xy_plane.png)
   - Places where magnitudes of horizontal gradients are locally higher than
       their surrounding regions. <br>
     ![the_dot_plot](./output/raw_data/dot_plot.png)
