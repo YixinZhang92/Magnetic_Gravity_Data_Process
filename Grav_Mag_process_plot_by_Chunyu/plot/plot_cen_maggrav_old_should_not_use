@@ -1,0 +1,281 @@
+#! /bin/csh -f
+
+#   Remove the previous generated files
+/bin/rm  *.ps *.grd *.cpt *.uc.*
+
+#   plot_cen_maggrav: window a region from the central US gravity and
+#                     magnetics database, plot
+
+#   Check the number of input arguments and return "Usage" info message to
+#       screen if argv does not equal to 7.
+if ($#argv != 7) then
+    echo "Usage:  $0 { minlong maxlong minlat maxlat datatype plotfile flag}"
+    echo "        minlong = minimum longitude (east is positive)"
+    echo "        maxlong = maximum longitude"
+    echo "        minlat  = minimum latitude (north is positive)"
+    echo "        maxlat  = maximum latitude"
+    echo "        datatype = 1, bouguer gravity anomaly"
+    echo "                 = 2, reduced to pole magnetic anomaly"
+    echo "                 = 3, total field magnetic anomaly"
+    echo "                 = 4, isostatic gravity anomaly"
+    echo "                 = 5, detrend gravity anomaly"
+    echo "                 = 6,  1km upperward continuation"
+    echo "                 = 7,  1km downward continuation"
+    echo "                 = 8,  horizontal derivative"
+    echo "                 = 9,  vertical derivative"
+    echo "        plotfile = name of postscript plot file"
+    echo "        flag     = 1, no filtering or continuation"
+    exit
+endif
+
+#   Check if the number that represent datatype is correctly input
+#       and return warning if it's out of 1-9
+#       (we only have 9 types with numbers from 1 to 9)
+if ( $5 < 1 || $5 > 9) then
+    echo ""
+    echo "Warning: "
+    echo "Use correct datatype number: 1-9"
+    echo ""
+	exit
+endif
+
+#   Set the location of directories where data files are located
+set GRAVDIR = ./Data/     #  gravity data
+set MAGDIR = ./Data/      #  magnetic data
+
+#   Set parameters based on each type of data
+#       DATA:   a .csv/.txt/.xyz file that is located at $GRAVDIR or $MAGDIR
+#               includes the data that you need for plotting
+#       title:  the title name that will be plot on the final plot
+#       mygrd:  temporary file name that used in the program
+#       unit:   unit name of input data for plotting
+#       zmin:   the minimum color value of CPTs for data
+#       zmax:   the maximum color value of CPTs for data
+#       step:   at what step, the color CPTs for data will change discretedly
+#               from zmin to zmax
+#       frame:  is set for the profile plot, 20 for gravity and 200 for magnetic
+if ( $5 == 1) then
+	set DATA = $GRAVDIR/completegravity.csv
+	set title = Complete_Bouguer_Anomaly
+	set mygrd = cenboug
+	set unit = mgal
+	set step = 20
+	set zmin = -70
+	set zmax = 60
+endif
+if ( $5 == 2) then
+	set DATA = $MAGDIR/RTP.txt
+	set title = RTP Anomaly
+	set mygrd = cenrtpmag
+	set unit = nT
+	set zmin = -800
+	set zmax = 1500
+	set step = 200
+endif
+if ( $5 == 3) then
+	set DATA = $MAGDIR/magnetic_anomaly.csv
+	set title = Magnetic_Anomaly
+	set mygrd = centotmag
+	set unit = nT
+	set zmin = -800
+	set zmax = 1500
+	set step = 200
+endif
+if ( $5 == 4) then
+	set DATA = $GRAVDIR/isograv.xyz
+	set title = isostatic Anomaly
+	set mygrd = ceniso
+	set unit = mgal
+endif
+if ( $5 == 5) then
+	set DATA = $GRAVDIR/detrend.txt
+	set title = detrend_magnetic Anomaly
+	set mygrd = cendetrendmag
+	set unit = nT
+	set zmin = -800
+	set zmax = 1500
+	set step = 200
+endif
+if ( $5 == 6) then
+    set DATA = $MAGDIR/up.txt
+    set title = Magnetic_Anomaly_up_1km
+    set mygrd = cenupmag
+	set unit = nT
+	set zmin = -300
+	set zmax = 300
+	set step = 50
+endif
+if ( $5 == 7) then
+    set DATA = $MAGDIR/down.txt
+    set title = Magnetic_Anomaly_down_1km
+    set mygrd = cendownmag
+	set unit = nT
+endif
+if ( $5 == 8) then
+    set DATA = $MAGDIR/yderivative.txt
+    set title = Magnetic_Anomaly_y-firstorder_derivative
+    set mygrd = cenhorizontalmag
+	set unit = nT
+	set zmin = -10000
+	set zmax = 33000
+	set step = 2000
+endif
+if ( $5 == 9) then
+    set DATA = $MAGDIR/vertical.txt
+    set title = Magnetic_Anomaly_vertical_derivative
+    set mygrd = cenverticalmag
+	set unit = nT
+	set zmin = -10000
+	set zmax = 20000
+	set step = 2000
+endif
+
+#   Set .gmtdefaults file locally
+#   gmtdefaults -Du  >  ~/.gmtdefaults
+#   gmtset DEGREE_FORMAT 5
+
+#   Four corners of the plot: give the max and min longtitude and latitude
+set LONMIN = $1
+set LONMAX = $2
+set LATMIN = $3
+set LATMAX = $4
+
+#   Set the type of map projection
+#       -J is a parameter for psbasemap.
+#       M after -J means you want to use Mecator projection which
+#       is the most commonly used projection for mapping.
+set PROJ = Jm
+
+#   Set the horizontal length scale of the final plot
+#       The length along the vertical direction will be determined by GMT.
+set SCALE = 3       # inches
+
+#   Set the location of the plot's lower left corner on page
+set XOFFSET = 2.5
+set YOFFSET = 3.0
+
+#   Set the orientation of the plot
+#       -P means the Portrait mode instead of landscape mode.
+#           (to use landscape mode, remove the -P)
+set ORIENT = -P
+
+#   Set the output file's name (use the 6th argument from the inputs)
+set OUTPUTFILE = $6.ps
+
+#   Set the resolution of gmt dataset
+#       -D is a parameter for you to choose which database of coastlines and
+#           political boundaries to be used. -Dh means you want to use the
+#           high resolution one. From low to high: -Dc (coarse), -Dl (low),
+#       -Dh (high), -Df (full). For mapping large areas you may want to
+#           use -Dl or -Dc.
+set RESOL = -Df
+
+#   Standard switched for more to follow
+#       -K means you will have more output to be added to $6.ps
+#       -O means you want the output (coastlines and political boundaries)
+#           created by this pscoast command to be Overplotted on top of the
+#           output from the commands above
+set CONTINUE = "-K -O"
+
+#   Convert corners to a region
+set REGION = $LONMIN/$LONMAX/$LATMIN/$LATMAX
+
+#   Set the grid increment in degrees
+set xinc = .01
+set yinc = .01
+
+#   The next 2 need be run only the first time if you are busy changing
+#       map view stuff!
+
+#   blockmedian: is used as a pre-processor before running surface to
+#                avoid aliasing short wavelengths
+#       -Q: (Quicker) Finds median z and (x,y) at that the median z
+#       -V: Select verbosity level
+gmt blockmedian $DATA -I$xinc/$yinc -R$REGION   -Q -V >! $mygrd".xyz"
+#   surface: reads randomly-spaced (x,y,z) triples from standard input [or
+#            table] and produces a binary grid file of gridded values z(x,y)
+#            by using (1 - T) * L (L (z)) + T * L (z) = 0.
+#       -T: tension_factor(s). These must be between 0 and 1
+gmt surface $mygrd".xyz" -G$mygrd".grd" -I$xinc/$yinc -R$REGION -T.25 -V 
+
+##################################################
+if ( $7 != 1 ) then
+#       filter, upward/downward continuation if wanted
+    gmt grdfft $mygrd.grd -C-100 -M -L -G$mygrd.uc.grd
+#   grdfft $mygrd.grd -D10 -M -L -G$mygrd.uc.grd
+#       second derivative
+#   grdfft $mygrd.grd -D -D -M -V -G$mygrd.uc.grd
+endif
+
+#    make the color table for the original data
+#awk '{print $3}' $mygrd.xyz >! $mygrd.1
+#gmt minmax -I1/1 -C $mygrd.1 >! $mygrd.minmax
+#@ zmin = `awk '{print $1}' $mygrd.minmax`
+#@ zmax = `awk '{print $2}' $mygrd.minmax`
+
+gmt makecpt -Cjet -Z -T$zmin/$zmax/$step -V >! $mygrd".cpt"
+
+# magnetic values
+
+#gmt makecpt -Crainbow -Z -T$zmin/$zmax/50 -V >! $mygrd".cpt"
+
+# upward continuation cpt
+#gmt makecpt -Crainbow -Z -T$zmin/$zmax/50 -V >! $mygrd".cpt"
+#makecpt -Cno_green -Z -T$zmin/$zmax/10 -V >! $mygrd".cpt"
+#makecpt -Cgravity -Z -T$zmin/$zmax/10 -V >! $mygrd".cpt"
+# cpt made by Heather - gravity.cpt, magnetics.cpt
+
+#makecpt -Crainbow -Z `minmax -T1 $mygrd.1` -V >! $mygrd".cpt"
+
+if ( $7 != 1 ) then
+#    make the color table for the filtered data
+gmt grd2xyz $mygrd.uc.grd >! $mygrd.uc.xyz
+awk '{print $3}' $mygrd.uc.xyz >! $mygrd.uc.1
+gmt minmax -I1/1 -C $mygrd.uc.1 >! $mygrd.uc.minmax
+@ zmin1 = `awk '{print $1}' $mygrd.uc.minmax`
+@ zmax1 = `awk '{print $2}' $mygrd.uc.minmax`
+gmt makecpt -Crainbow -Z -T$zmin1/$zmax1/100 >! $mygrd".uc.cpt"
+endif
+
+gmt grdimage $mygrd.uc.grd -C$mygrd.uc.cpt -$PROJ$SCALE -R$REGION -V -K -X$XOFFSET -Y$YOFFSET -P >! $OUTPUTFILE
+gmt pscoast -$PROJ -Bf0.5a0.5:."$title": -R$REGION -Df -W -Ia -Na -V -O -K >> $OUTPUTFILE
+
+################################################################################################
+##
+##  Plot the profile with setted up profile_line
+##
+##  change start and end : starting point and ending point
+##  Format: longitude/latitude
+#############################################################################################
+set INCREMENT = 1
+set START = -88/35
+set END = -91/38
+gmt project -G$INCREMENT -Q -E$END -C$START -V >! slicecoords.xyz
+gmt grdtrack slicecoords.xyz -G$mygrd.grd -V >! slicevals.xyz
+awk '{ print $3, $4}' slicevals.xyz >! profile.txt
+#################################################################################################
+##
+##  warnning: if it is magnetic plot, change B20 to B200
+##
+################################################################################################
+gmt psscale -D8/-1.00/15.0/0.2h -B20:"$unit": -C$mygrd.cpt -O -K -V  >> $OUTPUTFILE
+
+gmt psxy profile_line.txt -R -$PROJ -O -W1 -Sc0.2 -G255/255/255 -K >> $OUTPUTFILE
+gmt psxy profile_line.txt -R -$PROJ -O -W1 -K  >> $OUTPUTFILE
+
+##########################################################################################
+##
+##  warnning: change the tick if it is magnetic plot (example B40:Distance:/200)
+##
+#########################################################################################
+set tick=-B40:Distance:/20:."$title":WSen
+awk '{print $1, $2}' profile.txt | gmt psxy -R0/440/$zmin/$zmax -JX15/5 $tick -W1  -Sc0.2 -G200 -O \
+-Y19 >> $OUTPUTFILE
+
+if ( $7 != 1 ) then
+ gmt grdimage $mygrd.uc.grd -C$mygrd.uc.cpt -X3.2 -$PROJ -R$REGION $CONTINUE -V >> $OUTPUTFILE
+ gmt pscoast -$PROJ -Bf1a2:"$title": -R$REGION -Df -Ia2 -Na -V $CONTINUE >> $OUTPUTFILE
+
+#   CAP write scale
+endif
+

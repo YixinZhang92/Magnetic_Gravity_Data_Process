@@ -1,0 +1,64 @@
+#!/bin/bash
+# upward/downward continuation test script
+# GENG, Yu
+# 2017-12-07
+
+# Define altitude in [m].
+alt=800  # 800 m
+
+# Changable parameters.
+cmap=jet  # colormap
+B=a20f10  # color scale
+C=20      # contour interval
+dat=../input/xyzgrd.asc
+    # raw data measured on the Earth's surface
+
+# Define study region.
+J=M4i
+R=-90.5/-89.0/36.25/37.25
+
+# Auto file naming.
+file=`echo $0 | sed -E 's/^(.*)\..*$/\1/g'`
+filename="$file.ps"
+
+echo "Cleaning GMT configuration files..."
+[[ -e .gmtcommands4 ]] && rm .gmtcommands4
+[[ -e .gmtdefaults4 ]] && rm .gmtdefaults4
+
+echo "Modifying default parameters..."
+gmtset BASEMAP_TYPE fancy
+gmtset HEADER_FONT_SIZE 16p
+gmtset LABEL_FONT_SIZE 14p
+gmtset PAGE_ORIENTATION portrait
+gmtset PAPER_MEDIA A4
+
+echo "Computing continuation..."
+surface $dat -Gtmp.nc -R$R -I0.01
+    # grid the data and save it as tmp.nc
+grdfft tmp.nc -M -C$alt -L -N512/512d -Gtmp.grd
+    # do continuation on tmp.nc
+    # -N: append 'd' to detrend it
+grd2cpt tmp.grd -C$cmap -Di -M -T_ -Z > tmp.cpt
+    # pay attention to the usage of -D and -M
+    # -T forcely centred at the zero
+    # append _ to enhance the anomalies
+
+echo "Projecting grids..."
+grdimage tmp.grd -Ctmp.cpt -R$R -J$J -Q -Xc -Yc -K > $filename
+grdcontour tmp.grd -C$C -J$J -R$R -Wdarkgray -A- -O -K >> $filename
+
+echo "Plotting continents..."
+pscoast -R$R -J$J -Ba1f0.5 -W -Dh -Sdarkgray -Ir -N1 -O -K >> $filename
+    # -Dh: use high definition considering the size of the study region
+psscale -Al -D2i/-0.8i/4i/0.2ih -Ctmp.cpt \
+    -B$B:"Upward Continuation to 800 m [mGal]": -O >> $filename
+    # caption your plot
+
+echo "Removing temporary files..."
+rm tmp.*
+
+echo "Reloading the document..."
+ps2raster $filename -A -P -Tg
+open $file.png
+
+echo "Done."
