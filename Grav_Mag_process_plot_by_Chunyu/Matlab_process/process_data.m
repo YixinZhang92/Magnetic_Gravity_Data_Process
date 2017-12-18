@@ -105,35 +105,35 @@ lat=reshape(liny,[16384,1]);
 
 M1=reshape(IBA,[16384,1]);
 data1=[long,lat,M1];
-dlmwrite('original.txt',data1,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/original.txt',data1,'delimiter','\t','precision','%.4f')
 
 M2=reshape(IBA1,[16384,1]);
 data2=[long,lat,M2];
-dlmwrite('detrend.txt',data2,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/detrend.txt',data2,'delimiter','\t','precision','%.4f')
 
 M3=reshape(filtR_dat,[16384,1]);
 data3=[long,lat,M3];
-dlmwrite('RTP.txt',data3,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/RTP.txt',data3,'delimiter','\t','precision','%.4f')
 
 M4=reshape(g_up,[16384,1]);
 up=[long,lat,M4];
-dlmwrite('up.txt',up,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/up.txt',up,'delimiter','\t','precision','%.4f')
 
 M5=reshape(g_down,[16384,1]);
 down=[long,lat,M5];
-dlmwrite('down.txt',down,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/down.txt',down,'delimiter','\t','precision','%.4f')
 
 M6=reshape(derivative,[16384,1]);
 vertical=[long,lat,M6];
-dlmwrite('vertical.txt',vertical,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/vertical.txt',vertical,'delimiter','\t','precision','%.4f')
 
 M7=reshape(x_deriv,[16384,1]);
 xderivative=[long,lat,M7];
-dlmwrite('xderivative.txt',xderivative,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/xderivative.txt',xderivative,'delimiter','\t','precision','%.4f')
 
 M8=reshape(y_deriv,[16384,1]);
 yderivative=[long,lat,M8];
-dlmwrite('yderivative.txt',yderivative,'delimiter','\t','precision','%.4f')
+dlmwrite('../Data/yderivative.txt',yderivative,'delimiter','\t','precision','%.4f')
 
 
 
